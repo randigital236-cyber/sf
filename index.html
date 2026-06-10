@@ -244,6 +244,18 @@
             font-size: 10px;
             display: block;
         }
+
+        /* Demo Alert */
+        .demo-alert {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid #f59e0b;
+            color: #fbbf24;
+            padding: 12px 20px;
+            margin: 20px;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 13px;
+        }
         
         @media (max-width: 480px) {
             .stats-grid { gap: 12px; }
@@ -264,12 +276,12 @@
             <h3>RND Rewards</h3>
             <p>The Yield Layer</p>
         </div>
-        <div class="nav-item active" onclick="navigateTo('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
-        <div class="nav-item" onclick="navigateTo('profile')"><i class="fas fa-user-friends"></i> My Referrals</div>
-        <div class="nav-item" onclick="navigateTo('spin')"><i class="fas fa-gamepad"></i> Spin Wheel</div>
-        <div class="nav-item" onclick="navigateTo('tasks')"><i class="fab fa-facebook"></i> Social Tasks</div>
-        <div class="nav-item" onclick="navigateTo('withdraw')"><i class="fas fa-money-bill-wave"></i> Withdraw</div>
-        <div class="nav-item logout-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</div>
+        <div class="nav-item active" onclick="showAlert('Dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
+        <div class="nav-item" onclick="showAlert('My Referrals')"><i class="fas fa-user-friends"></i> My Referrals</div>
+        <div class="nav-item" onclick="showAlert('Spin Wheel')"><i class="fas fa-gamepad"></i> Spin Wheel</div>
+        <div class="nav-item" onclick="showAlert('Social Tasks')"><i class="fab fa-facebook"></i> Social Tasks</div>
+        <div class="nav-item" onclick="showAlert('Withdraw')"><i class="fas fa-money-bill-wave"></i> Withdraw</div>
+        <div class="nav-item logout-item" onclick="showAlert('Logout')"><i class="fas fa-sign-out-alt"></i> Logout</div>
     </div>
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
@@ -283,29 +295,34 @@
         </div>
         <div class="welcome-badge">
             <p>Welcome back,</p>
-            <h3 id="userName">User</h3>
+            <h3>Ramesh Kumar</h3>
         </div>
+    </div>
+
+    <!-- Demo Alert -->
+    <div class="demo-alert">
+        <i class="fas fa-info-circle"></i> Demo Mode - For Design Preview Only
     </div>
 
     <div class="stats-grid">
         <div class="stat-card">
             <i class="fas fa-wallet"></i>
-            <div class="value" id="totalBalance">0</div>
+            <div class="value">1,250</div>
             <h4>Total Balance</h4>
         </div>
         <div class="stat-card">
             <i class="fas fa-users"></i>
-            <div class="value" id="referralWallet">0</div>
+            <div class="value">850</div>
             <h4>Referral Wallet</h4>
         </div>
         <div class="stat-card">
             <i class="fas fa-sync-alt"></i>
-            <div class="value" id="spinWallet">0</div>
+            <div class="value">400</div>
             <h4>Spin Wallet</h4>
         </div>
         <div class="stat-card">
             <i class="fas fa-chart-line"></i>
-            <div class="value" id="totalEarned">0</div>
+            <div class="value">1,250</div>
             <h4>Total Earned</h4>
         </div>
     </div>
@@ -316,7 +333,7 @@
             <span>Your Referral Link</span>
         </div>
         <div class="referral-box">
-            <input type="text" id="referralLink" readonly>
+            <input type="text" id="referralLink" value="http://app.randigital.in/index.html?ref=RND8A2F4" readonly>
             <button class="copy-btn" onclick="copyLink()"><i class="fas fa-copy"></i> Copy</button>
         </div>
         <div class="share-grid">
@@ -331,109 +348,53 @@
             <span>Quick Actions</span>
         </div>
         <div class="action-grid">
-            <div class="action-card" onclick="navigateTo('profile')"><i class="fas fa-users"></i><h4>My Team</h4><small>View referrals</small></div>
-            <div class="action-card" onclick="navigateTo('spin')"><i class="fas fa-gamepad"></i><h4>Spin & Earn</h4><small>Win rewards</small></div>
-            <div class="action-card" onclick="navigateTo('tasks')"><i class="fab fa-facebook"></i><h4>Social Tasks</h4><small>Complete to withdraw</small></div>
-            <div class="action-card" onclick="navigateTo('withdraw')"><i class="fas fa-hand-holding-usd"></i><h4>Withdraw</h4><small>Min 50 RND</small></div>
+            <div class="action-card" onclick="showAlert('My Team')"><i class="fas fa-users"></i><h4>My Team</h4><small>View referrals</small></div>
+            <div class="action-card" onclick="showAlert('Spin & Earn')"><i class="fas fa-gamepad"></i><h4>Spin & Earn</h4><small>Win rewards</small></div>
+            <div class="action-card" onclick="showAlert('Social Tasks')"><i class="fab fa-facebook"></i><h4>Social Tasks</h4><small>Complete to withdraw</small></div>
+            <div class="action-card" onclick="showAlert('Withdraw')"><i class="fas fa-hand-holding-usd"></i><h4>Withdraw</h4><small>Min 50 RND</small></div>
         </div>
     </div>
 
     <div style="height: 80px;"></div>
 
     <div class="bottom-nav">
-        <div class="nav-item-bottom active" onclick="navigateTo('dashboard')"><i class="fas fa-home"></i><span>Home</span></div>
-        <div class="nav-item-bottom" onclick="navigateTo('withdraw')"><i class="fas fa-wallet"></i><span>Withdraw</span></div>
-        <div class="nav-item-bottom" onclick="navigateTo('spin')"><i class="fas fa-gamepad"></i><span>Spin</span></div>
-        <div class="nav-item-bottom" onclick="navigateTo('profile')"><i class="fas fa-users"></i><span>Refer</span></div>
+        <div class="nav-item-bottom active" onclick="showAlert('Home')"><i class="fas fa-home"></i><span>Home</span></div>
+        <div class="nav-item-bottom" onclick="showAlert('Withdraw')"><i class="fas fa-wallet"></i><span>Withdraw</span></div>
+        <div class="nav-item-bottom" onclick="showAlert('Spin')"><i class="fas fa-gamepad"></i><span>Spin</span></div>
+        <div class="nav-item-bottom" onclick="showAlert('Refer')"><i class="fas fa-users"></i><span>Refer</span></div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    <script>
+        // Demo functions - No Firebase
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('open');
+        }
         
-        const firebaseConfig = {
-            apiKey: "AIzaSyARtuToUfDsK6EOrqpJ6nBpfSHx2JobWhQ",
-            authDomain: "randigital-e7715.firebaseapp.com",
-            databaseURL: "https://randigital-e7715-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "randigital-e7715",
-            storageBucket: "randigital-e7715.firebasestorage.app",
-            messagingSenderId: "218883279353",
-            appId: "1:218883279353:web:cda990aa068f8fdf4d1528"
-        };
+        function copyLink() {
+            let inp = document.getElementById('referralLink');
+            inp.select();
+            document.execCommand('copy');
+            alert('✅ Referral link copied! (Demo Mode)');
+        }
         
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
-        let currentUser = null, userData = null;
+        function shareFacebook() {
+            alert('📱 Facebook Share - Demo Mode');
+        }
         
-        const OFFICIAL_DOMAIN = "http://app.randigital.in";
+        function shareTwitter() {
+            alert('🐦 Twitter Share - Demo Mode');
+        }
         
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                window.location.href = 'index.html';
-                return;
-            }
-            currentUser = user;
-            await loadUserData();
-            await loadReferralStats();
+        function showAlert(page) {
+            alert(`📍 ${page} - Demo Mode\n\nThis is a design preview. Firebase will be connected in the final version.`);
+        }
+        
+        // Close sidebar when clicking outside
+        document.getElementById('overlay').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.remove('open');
         });
-        
-        async function loadUserData() {
-            const snap = await get(ref(db, 'users/' + currentUser.uid));
-            userData = snap.val();
-            if(userData){
-                document.getElementById('userName').innerText = userData.name;
-                document.getElementById('totalBalance').innerText = (userData.referralWallet||0)+(userData.spinWallet||0);
-                document.getElementById('referralWallet').innerText = userData.referralWallet||0;
-                document.getElementById('spinWallet').innerText = userData.spinWallet||0;
-                document.getElementById('totalEarned').innerText = userData.totalEarned||0;
-                document.getElementById('referralLink').value = `${OFFICIAL_DOMAIN}/index.html?ref=${userData.referralCode}`;
-            }
-        }
-        
-        async function loadReferralStats() {
-            const referralsRef = ref(db, 'referrals/' + currentUser.uid);
-            const snapshot = await get(referralsRef);
-            const referrals = snapshot.val() || { level1: [], level2: [] };
-        }
-        
-        window.toggleSidebar = function() { 
-            document.getElementById('sidebar').classList.toggle('open'); 
-            document.getElementById('overlay').classList.toggle('open'); 
-        };
-        
-        window.navigateTo = function(page) { 
-            if(page === 'dashboard') window.location.href = 'dashboard.html';
-            else if(page === 'profile') window.location.href = 'profile.html';
-            else if(page === 'spin') window.location.href = 'spin.html';
-            else if(page === 'tasks') window.location.href = 'social-tasks.html';
-            else if(page === 'withdraw') window.location.href = 'withdraw.html';
-        };
-        
-        window.copyLink = function() { 
-            let inp = document.getElementById('referralLink'); 
-            inp.select(); 
-            document.execCommand('copy'); 
-            alert('✅ Referral link copied!'); 
-        };
-        
-        window.shareFacebook = function() {
-            const link = document.getElementById('referralLink').value;
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, '_blank');
-        };
-        
-        window.shareTwitter = function() {
-            const link = document.getElementById('referralLink').value;
-            const text = "Join RND Rewards and earn crypto! 🚀";
-            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`, '_blank');
-        };
-        
-        window.logout = async function() { 
-            await signOut(auth); 
-            localStorage.clear(); 
-            window.location.href = 'index.html'; 
-        };
     </script>
 </body>
 </html>
