@@ -44,7 +44,7 @@
         .section-title i { color: #667eea; }
         
         .task-card { background: rgba(10,10,20,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 20px; margin-bottom: 20px; }
-        .task-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .task-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
         .task-icon { width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 28px; }
         .fb-icon { background: #1877f2; }
         .tw-icon { background: #1da1f2; }
@@ -145,11 +145,11 @@
                 <div class="step"><div class="step-number">5</div><div class="step-text"><strong>Upload</strong> screenshot for verification</div></div>
             </div>
             
-            <button class="open-page-btn" onclick="openFacebookPage()"><i class="fab fa-facebook-f"></i> Open Facebook Page</button>
+            <button class="open-page-btn" onclick="openFacebookPage()"><i class="fab fa-facebook-f"></i> Open Facebook Page (New Tab)</button>
             
             <div id="facebookUploadArea" class="upload-area">
-                <label class="upload-label" id="facebookUploadLabel"><i class="fas fa-camera"></i> Upload Screenshot</label>
-                <input type="file" id="facebookFile" class="file-input" accept="image/*" capture="environment">
+                <label class="upload-label" id="facebookUploadLabel"><i class="fas fa-camera"></i> Select Screenshot</label>
+                <input type="file" id="facebookFile" class="file-input" accept="image/*">
                 <img id="facebookPreview" class="preview-img" alt="Preview">
                 <button id="facebookVerifyBtn" class="verify-btn" disabled><i class="fas fa-check-circle"></i> Submit & Verify</button>
             </div>
@@ -181,11 +181,11 @@
                 <div class="step"><div class="step-number">5</div><div class="step-text"><strong>Upload</strong> screenshot for verification</div></div>
             </div>
             
-            <button class="open-page-btn" onclick="openTwitterPage()"><i class="fab fa-twitter"></i> Open Twitter/X</button>
+            <button class="open-page-btn" onclick="openTwitterPage()"><i class="fab fa-twitter"></i> Open Twitter/X (New Tab)</button>
             
             <div id="twitterUploadArea" class="upload-area">
-                <label class="upload-label" id="twitterUploadLabel"><i class="fas fa-camera"></i> Upload Screenshot</label>
-                <input type="file" id="twitterFile" class="file-input" accept="image/*" capture="environment">
+                <label class="upload-label" id="twitterUploadLabel"><i class="fas fa-camera"></i> Select Screenshot</label>
+                <input type="file" id="twitterFile" class="file-input" accept="image/*">
                 <img id="twitterPreview" class="preview-img" alt="Preview">
                 <button id="twitterVerifyBtn" class="verify-btn" disabled><i class="fas fa-check-circle"></i> Submit & Verify</button>
             </div>
@@ -203,6 +203,7 @@
             <p><i class="fas fa-check-circle" style="color: #10b981;"></i> You must complete <strong>BOTH</strong> Facebook and Twitter tasks to enable withdrawal.</p>
             <p style="margin-top: 10px;"><i class="fas fa-clock" style="color: #f59e0b;"></i> Verification may take 1-2 minutes after submission.</p>
             <p style="margin-top: 10px;"><i class="fas fa-shield-alt" style="color: #667eea;"></i> Your screenshot is for verification only and will not be stored permanently.</p>
+            <p style="margin-top: 10px;"><i class="fas fa-external-link-alt" style="color: #a78bfa;"></i> Click "Open" button to open page in new tab. Take screenshot and come back to upload.</p>
         </div>
     </div>
 
@@ -261,20 +262,18 @@
         async function loadTaskStatus() {
             const tasks = userData?.socialTasks || {};
             
-            // Facebook Task Status
             if (tasks.facebook === true) {
                 document.getElementById('facebookUploadArea').style.display = 'none';
                 document.getElementById('facebookCompleted').style.display = 'block';
             }
             
-            // Twitter Task Status
             if (tasks.twitter === true) {
                 document.getElementById('twitterUploadArea').style.display = 'none';
                 document.getElementById('twitterCompleted').style.display = 'block';
             }
         }
         
-        // Setup file upload for Facebook
+        // Facebook File Upload
         const facebookFile = document.getElementById('facebookFile');
         const facebookPreview = document.getElementById('facebookPreview');
         const facebookVerifyBtn = document.getElementById('facebookVerifyBtn');
@@ -285,6 +284,10 @@
             if (file) {
                 if (file.size > 5 * 1024 * 1024) {
                     alert('❌ File too large! Max 5MB');
+                    return;
+                }
+                if (!file.type.startsWith('image/')) {
+                    alert('❌ Please select an image file!');
                     return;
                 }
                 const reader = new FileReader();
@@ -298,7 +301,7 @@
             }
         });
         
-        // Setup file upload for Twitter
+        // Twitter File Upload
         const twitterFile = document.getElementById('twitterFile');
         const twitterPreview = document.getElementById('twitterPreview');
         const twitterVerifyBtn = document.getElementById('twitterVerifyBtn');
@@ -309,6 +312,10 @@
             if (file) {
                 if (file.size > 5 * 1024 * 1024) {
                     alert('❌ File too large! Max 5MB');
+                    return;
+                }
+                if (!file.type.startsWith('image/')) {
+                    alert('❌ Please select an image file!');
                     return;
                 }
                 const reader = new FileReader();
@@ -325,7 +332,7 @@
         // Facebook Verify
         facebookVerifyBtn.addEventListener('click', async () => {
             if (!facebookImageData) {
-                alert('❌ Please upload a screenshot first!');
+                alert('❌ Please select a screenshot first!');
                 return;
             }
             
@@ -359,7 +366,7 @@
         // Twitter Verify
         twitterVerifyBtn.addEventListener('click', async () => {
             if (!twitterImageData) {
-                alert('❌ Please upload a screenshot first!');
+                alert('❌ Please select a screenshot first!');
                 return;
             }
             
