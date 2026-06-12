@@ -241,22 +241,32 @@
         });
         
         async function loadUserData() {
-            const snap = await get(ref(db, 'users/' + currentUser.uid));
-            userData = snap.val();
-            if (!userData) userData = { spinWallet: 0, totalEarned: 0, socialTasks: {} };
-            if (!userData.socialTasks) userData.socialTasks = {};
+            try {
+                const snap = await get(ref(db, 'users/' + currentUser.uid));
+                userData = snap.val();
+                if (!userData) userData = { spinWallet: 0, totalEarned: 0, socialTasks: {} };
+                if (!userData.socialTasks) userData.socialTasks = {};
+                console.log("User data loaded:", userData);
+            } catch (error) {
+                console.error("Error loading user data:", error);
+                alert("Error loading user data. Please refresh the page.");
+            }
         }
         
         async function loadTaskStatus() {
-            const tasks = userData?.socialTasks || {};
-            
-            if (tasks.facebook === true) {
-                document.getElementById('fbUploadArea').style.display = 'none';
-                document.getElementById('fbCompleted').style.display = 'block';
-            }
-            if (tasks.twitter === true) {
-                document.getElementById('twUploadArea').style.display = 'none';
-                document.getElementById('twCompleted').style.display = 'block';
+            try {
+                const tasks = userData?.socialTasks || {};
+                
+                if (tasks.facebook === true) {
+                    document.getElementById('fbUploadArea').style.display = 'none';
+                    document.getElementById('fbCompleted').style.display = 'block';
+                }
+                if (tasks.twitter === true) {
+                    document.getElementById('twUploadArea').style.display = 'none';
+                    document.getElementById('twCompleted').style.display = 'block';
+                }
+            } catch (error) {
+                console.error("Error loading task status:", error);
             }
         }
         
@@ -281,6 +291,7 @@
                 fbImageData = ev.target.result;
                 fbPreviewDiv.innerHTML = `<img src="${fbImageData}" class="preview-img" alt="Preview">`;
                 fbVerifyBtn.disabled = false;
+                fbVerifyBtn.style.opacity = '1';
             };
             reader.readAsDataURL(file);
         });
@@ -296,13 +307,19 @@
             
             try {
                 const currentSpin = userData.spinWallet || 0;
-                await update(ref(db, 'users/' + currentUser.uid), {
-                    'socialTasks.facebook': true,
-                    spinWallet: currentSpin + 3,
-                    totalEarned: (userData.totalEarned || 0) + 3
-                });
+                const currentTotal = userData.totalEarned || 0;
                 
+                // Update Firebase with proper structure
+                const updates = {};
+                updates['socialTasks/facebook'] = true;
+                updates['spinWallet'] = currentSpin + 3;
+                updates['totalEarned'] = currentTotal + 3;
+                
+                await update(ref(db, 'users/' + currentUser.uid), updates);
+                
+                // Update local data
                 userData.spinWallet = currentSpin + 3;
+                userData.totalEarned = currentTotal + 3;
                 userData.socialTasks.facebook = true;
                 
                 document.getElementById('fbUploadArea').style.display = 'none';
@@ -311,8 +328,8 @@
                 alert('✅ Facebook Task Verified! +3 RND added to your Spin Wallet!');
                 
             } catch (error) {
-                console.error("Error:", error);
-                alert('❌ Verification failed. Please try again.');
+                console.error("Verification error:", error);
+                alert('❌ Verification failed: ' + error.message);
                 fbVerifyBtn.disabled = false;
                 fbVerifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Submit & Verify';
             }
@@ -339,6 +356,7 @@
                 twImageData = ev.target.result;
                 twPreviewDiv.innerHTML = `<img src="${twImageData}" class="preview-img" alt="Preview">`;
                 twVerifyBtn.disabled = false;
+                twVerifyBtn.style.opacity = '1';
             };
             reader.readAsDataURL(file);
         });
@@ -354,13 +372,19 @@
             
             try {
                 const currentSpin = userData.spinWallet || 0;
-                await update(ref(db, 'users/' + currentUser.uid), {
-                    'socialTasks.twitter': true,
-                    spinWallet: currentSpin + 3,
-                    totalEarned: (userData.totalEarned || 0) + 3
-                });
+                const currentTotal = userData.totalEarned || 0;
                 
+                // Update Firebase with proper structure
+                const updates = {};
+                updates['socialTasks/twitter'] = true;
+                updates['spinWallet'] = currentSpin + 3;
+                updates['totalEarned'] = currentTotal + 3;
+                
+                await update(ref(db, 'users/' + currentUser.uid), updates);
+                
+                // Update local data
                 userData.spinWallet = currentSpin + 3;
+                userData.totalEarned = currentTotal + 3;
                 userData.socialTasks.twitter = true;
                 
                 document.getElementById('twUploadArea').style.display = 'none';
@@ -369,15 +393,20 @@
                 alert('✅ Twitter Task Verified! +3 RND added to your Spin Wallet!');
                 
             } catch (error) {
-                console.error("Error:", error);
-                alert('❌ Verification failed. Please try again.');
+                console.error("Verification error:", error);
+                alert('❌ Verification failed: ' + error.message);
                 twVerifyBtn.disabled = false;
                 twVerifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Submit & Verify';
             }
         });
         
-        window.openFacebookPage = function() { window.open(SOCIAL_LINKS.facebook, '_blank'); };
-        window.openTwitterPage = function() { window.open(SOCIAL_LINKS.twitter, '_blank'); };
+        window.openFacebookPage = function() { 
+            window.open(SOCIAL_LINKS.facebook, '_blank'); 
+        };
+        
+        window.openTwitterPage = function() { 
+            window.open(SOCIAL_LINKS.twitter, '_blank'); 
+        };
         
         window.toggleSidebar = function() { 
             document.getElementById('sidebar').classList.toggle('open'); 
