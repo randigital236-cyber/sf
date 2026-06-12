@@ -17,9 +17,9 @@
         @keyframes floatGlow { 0%,100% { transform: translate(0,0); opacity: 0.5; } 50% { transform: translate(30px,-20px); opacity: 0.8; } }
         
         /* Sidebar */
-        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: rgba(15,15,25,0.98); backdrop-filter: blur(20px); border-right: 1px solid rgba(102,126,234,0.2); z-index: 1000; transition: 0.3s; padding: 25px 0; overflow-y: auto; }
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: rgba(15,15,25,0.98); backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.15); z-index: 1000; transition: 0.3s; padding: 25px 0; overflow-y: auto; }
         .sidebar.open { left: 0; }
-        .sidebar-header { text-align: center; padding: 0 20px 25px; border-bottom: 1px solid rgba(102,126,234,0.2); margin-bottom: 20px; }
+        .sidebar-header { text-align: center; padding: 0 20px 25px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
         .sidebar-header i { font-size: 45px; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .sidebar-header h3 { font-size: 24px; margin-top: 10px; background: linear-gradient(135deg, #fff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 25px; color: #aaa; cursor: pointer; transition: 0.3s; margin: 5px 15px; border-radius: 12px; }
@@ -32,29 +32,29 @@
         .overlay.open { display: block; }
         
         /* Header */
-        .header { padding: 20px 20px 60px 20px; background: linear-gradient(135deg, rgba(102,126,234,0.08) 0%, rgba(118,75,162,0.05) 100%); border-bottom: 1px solid rgba(102,126,234,0.15); }
-        .menu-btn { font-size: 24px; background: rgba(102,126,234,0.1); border: 1px solid rgba(102,126,234,0.2); color: #a78bfa; cursor: pointer; width: 45px; height: 45px; border-radius: 15px; backdrop-filter: blur(10px); }
+        .header { padding: 20px 20px 60px 20px; background: linear-gradient(135deg, rgba(102,126,234,0.08) 0%, rgba(118,75,162,0.05) 100%); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .menu-btn { font-size: 24px; background: rgba(102,126,234,0.1); border: 1px solid rgba(255,255,255,0.15); color: #a78bfa; cursor: pointer; width: 45px; height: 45px; border-radius: 15px; backdrop-filter: blur(10px); }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .logo-area h2 { font-size: 24px; background: linear-gradient(135deg, #fff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .welcome-badge h3 { font-size: 28px; margin-top: 5px; background: linear-gradient(135deg, #fff, #c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .welcome-badge p { opacity: 0.7; font-size: 14px; color: #9ca3af; }
         
-        /* Stats Cards */
+        /* Stats Cards - White Borders */
         .stats-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; padding: 0 20px; margin-top: -35px; }
-        .stat-card { background: rgba(20,20,30,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(102,126,234,0.2); border-radius: 24px; padding: 20px; transition: all 0.3s; }
-        .stat-card:hover { border-color: rgba(102,126,234,0.5); transform: translateY(-3px); }
+        .stat-card { background: rgba(20,20,30,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); border-radius: 24px; padding: 20px; transition: all 0.3s; }
+        .stat-card:hover { border-color: rgba(255,255,255,0.4); transform: translateY(-3px); }
         .stat-card .value { font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #fff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .stat-card h4 { color: #9ca3af; font-size: 13px; margin-top: 8px; }
         .stat-card i { font-size: 28px; color: #667eea; margin-bottom: 10px; }
         
-        /* Sections */
-        .section { background: rgba(20,20,30,0.6); backdrop-filter: blur(10px); border: 1px solid rgba(102,126,234,0.15); border-radius: 28px; margin: 20px; padding: 24px; }
+        /* Sections - White Borders */
+        .section { background: rgba(20,20,30,0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); border-radius: 28px; margin: 20px; padding: 24px; }
         .section-title { font-size: 18px; margin-bottom: 20px; color: white; display: flex; align-items: center; gap: 10px; border-left: 3px solid #667eea; padding-left: 15px; }
         .section-title i { color: #667eea; }
         
         /* Referral Box */
         .referral-box { display: flex; gap: 12px; margin-bottom: 20px; }
-        .referral-box input { flex: 1; padding: 14px 16px; background: rgba(10,10,20,0.8); border: 1px solid rgba(102,126,234,0.3); border-radius: 16px; color: #a78bfa; font-family: monospace; font-size: 13px; }
+        .referral-box input { flex: 1; padding: 14px 16px; background: rgba(10,10,20,0.8); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; color: #a78bfa; font-family: monospace; font-size: 13px; }
         .copy-btn { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 0 25px; border-radius: 16px; cursor: pointer; font-weight: 600; }
         .share-grid { display: flex; gap: 12px; }
         .share-icon { flex: 1; padding: 12px; border-radius: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
@@ -62,26 +62,26 @@
         .facebook { background: #1877f2; color: white; }
         .twitter { background: #1da1f2; color: white; }
         
-        /* Action Grid */
+        /* Action Cards - White Borders */
         .action-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
-        .action-card { background: rgba(10,10,20,0.6); border: 1px solid rgba(102,126,234,0.2); border-radius: 20px; padding: 18px; text-align: center; cursor: pointer; transition: all 0.2s; }
-        .action-card:hover { border-color: #667eea; background: rgba(102,126,234,0.1); transform: translateY(-2px); }
+        .action-card { background: rgba(10,10,20,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 18px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .action-card:hover { border-color: rgba(255,255,255,0.4); background: rgba(102,126,234,0.1); transform: translateY(-2px); }
         .action-card i { font-size: 28px; color: #667eea; margin-bottom: 10px; }
         .action-card h4 { font-size: 14px; color: white; }
         .action-card small { font-size: 11px; color: #9ca3af; }
         
         /* Tokenomics & Roadmap */
         .info-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 15px; margin-bottom: 20px; }
-        .info-item { text-align: center; padding: 15px; background: rgba(10,10,20,0.4); border-radius: 20px; }
+        .info-item { text-align: center; padding: 15px; background: rgba(10,10,20,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
         .info-item .number { font-size: 28px; font-weight: 700; color: #d4af37; }
         .info-item .label { font-size: 12px; color: #9ca3af; margin-top: 5px; }
         .roadmap-list { display: flex; flex-direction: column; gap: 15px; }
-        .roadmap-item { display: flex; gap: 15px; padding: 15px; background: rgba(10,10,20,0.4); border-radius: 16px; border-left: 3px solid #667eea; }
+        .roadmap-item { display: flex; gap: 15px; padding: 15px; background: rgba(10,10,20,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; border-left: 3px solid #667eea; }
         .roadmap-phase { min-width: 80px; font-weight: 700; color: #667eea; }
         .roadmap-desc { color: #d1d5db; font-size: 13px; }
         
         /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 500px; margin: 0 auto; background: rgba(15,15,25,0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(102,126,234,0.2); display: flex; justify-content: space-around; padding: 12px 20px; border-radius: 30px 30px 0 0; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 500px; margin: 0 auto; background: rgba(15,15,25,0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; padding: 12px 20px; border-radius: 30px 30px 0 0; }
         .nav-item-bottom { text-align: center; cursor: pointer; color: #6b7280; transition: color 0.2s; }
         .nav-item-bottom.active { color: #667eea; }
         .nav-item-bottom i { font-size: 22px; }
@@ -145,8 +145,8 @@
         <div class="section-title"><i class="fas fa-link"></i><span>Your Referral Link</span></div>
         <div class="referral-box"><input type="text" id="referralLink" readonly><button class="copy-btn" onclick="copyLink()"><i class="fas fa-copy"></i> Copy</button></div>
         <div class="share-grid">
-            <div class="share-icon facebook" onclick="shareFacebook()"><i class="fab fa-facebook-f"></i> Facebook</div>
-            <div class="share-icon twitter" onclick="shareTwitter()"><i class="fab fa-twitter"></i> Twitter</div>
+            <div class="share-icon facebook" onclick="openFacebook()"><i class="fab fa-facebook-f"></i> Facebook</div>
+            <div class="share-icon twitter" onclick="openTwitter()"><i class="fab fa-twitter"></i> Twitter</div>
         </div>
     </div>
 
@@ -171,11 +171,11 @@
         </div>
         <div style="margin-top: 15px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span style="color:#9ca3af; font-size:12px;">Rewards Distribution</span><span style="color:#d4af37; font-size:12px;">75%</span></div>
-            <div style="height: 6px; background: rgba(102,126,234,0.2); border-radius: 10px; overflow: hidden;"><div style="width: 75%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 10px;"></div></div>
+            <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden;"><div style="width: 75%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 10px;"></div></div>
             <div style="display: flex; justify-content: space-between; margin-top: 12px; margin-bottom: 8px;"><span style="color:#9ca3af; font-size:12px;">Team & Development</span><span style="color:#d4af37; font-size:12px;">15%</span></div>
-            <div style="height: 6px; background: rgba(102,126,234,0.2); border-radius: 10px; overflow: hidden;"><div style="width: 15%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 10px;"></div></div>
+            <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden;"><div style="width: 15%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 10px;"></div></div>
             <div style="display: flex; justify-content: space-between; margin-top: 12px; margin-bottom: 8px;"><span style="color:#9ca3af; font-size:12px;">Marketing & Listing</span><span style="color:#d4af37; font-size:12px;">10%</span></div>
-            <div style="height: 6px; background: rgba(102,126,234,0.2); border-radius: 10px; overflow: hidden;"><div style="width: 10%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 10px;"></div></div>
+            <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden;"><div style="width: 10%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 10px;"></div></div>
         </div>
     </div>
 
@@ -233,6 +233,12 @@
         
         const OFFICIAL_DOMAIN = "https://randigital236-cyber.github.io/sf/";
         
+        // Social Media Links
+        const SOCIAL_LINKS = {
+            facebook: "https://www.facebook.com/profile.php?id=61590396932149",
+            twitter: "https://x.com/RanDigitalRND"
+        };
+        
         onAuthStateChanged(auth, async (user) => {
             if (!user) { window.location.href = 'index.html'; return; }
             currentUser = user;
@@ -272,14 +278,14 @@
             alert('✅ Referral link copied!'); 
         };
         
-        window.shareFacebook = function() {
-            const link = document.getElementById('referralLink').value;
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, '_blank');
+        // Open Facebook Page
+        window.openFacebook = function() {
+            window.open(SOCIAL_LINKS.facebook, '_blank');
         };
         
-        window.shareTwitter = function() {
-            const link = document.getElementById('referralLink').value;
-            window.open(`https://twitter.com/intent/tweet?text=Join%20RND%20Rewards%20and%20earn%20crypto!&url=${encodeURIComponent(link)}`, '_blank');
+        // Open Twitter Page
+        window.openTwitter = function() {
+            window.open(SOCIAL_LINKS.twitter, '_blank');
         };
         
         window.logout = async function() { 
