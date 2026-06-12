@@ -57,14 +57,15 @@
         .step-text { color: #d1d5db; font-size: 13px; }
         .step-text strong { color: #fbbf24; }
         
-        .open-page-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; padding: 10px 20px; border-radius: 40px; cursor: pointer; font-size: 13px; margin-right: 10px; transition: all 0.2s; }
+        .open-page-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; padding: 10px 20px; border-radius: 40px; cursor: pointer; font-size: 13px; margin-right: 10px; margin-bottom: 10px; transition: all 0.2s; }
         .open-page-btn:hover { background: rgba(255,255,255,0.15); }
         
         .upload-area { margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .upload-label { display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 10px 20px; border-radius: 40px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s; }
+        .upload-label { display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 12px 24px; border-radius: 40px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s; }
         .upload-label:hover { transform: translateY(-2px); }
         .file-input { display: none; }
-        .preview-img { margin-top: 15px; max-width: 100%; max-height: 150px; border-radius: 12px; display: none; border: 1px solid rgba(255,255,255,0.2); }
+        .preview-area { margin-top: 15px; text-align: center; }
+        .preview-img { max-width: 100%; max-height: 180px; border-radius: 16px; border: 2px solid rgba(255,255,255,0.2); display: none; margin-top: 10px; }
         
         .verify-btn { background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 12px 25px; border-radius: 40px; cursor: pointer; font-weight: 600; margin-top: 15px; width: 100%; transition: all 0.2s; }
         .verify-btn:hover { transform: translateY(-2px); }
@@ -145,12 +146,14 @@
                 <div class="step"><div class="step-number">5</div><div class="step-text"><strong>Upload</strong> screenshot for verification</div></div>
             </div>
             
-            <button class="open-page-btn" onclick="openFacebookPage()"><i class="fab fa-facebook-f"></i> Open Facebook Page (New Tab)</button>
+            <button class="open-page-btn" onclick="openFacebookPage()"><i class="fab fa-facebook-f"></i> Open Facebook Page</button>
             
             <div id="facebookUploadArea" class="upload-area">
                 <label class="upload-label" id="facebookUploadLabel"><i class="fas fa-camera"></i> Select Screenshot</label>
-                <input type="file" id="facebookFile" class="file-input" accept="image/*">
-                <img id="facebookPreview" class="preview-img" alt="Preview">
+                <input type="file" id="facebookFile" class="file-input" accept="image/*" capture="environment">
+                <div class="preview-area">
+                    <img id="facebookPreview" class="preview-img" alt="Preview">
+                </div>
                 <button id="facebookVerifyBtn" class="verify-btn" disabled><i class="fas fa-check-circle"></i> Submit & Verify</button>
             </div>
             
@@ -181,12 +184,14 @@
                 <div class="step"><div class="step-number">5</div><div class="step-text"><strong>Upload</strong> screenshot for verification</div></div>
             </div>
             
-            <button class="open-page-btn" onclick="openTwitterPage()"><i class="fab fa-twitter"></i> Open Twitter/X (New Tab)</button>
+            <button class="open-page-btn" onclick="openTwitterPage()"><i class="fab fa-twitter"></i> Open Twitter/X</button>
             
             <div id="twitterUploadArea" class="upload-area">
                 <label class="upload-label" id="twitterUploadLabel"><i class="fas fa-camera"></i> Select Screenshot</label>
-                <input type="file" id="twitterFile" class="file-input" accept="image/*">
-                <img id="twitterPreview" class="preview-img" alt="Preview">
+                <input type="file" id="twitterFile" class="file-input" accept="image/*" capture="environment">
+                <div class="preview-area">
+                    <img id="twitterPreview" class="preview-img" alt="Preview">
+                </div>
                 <button id="twitterVerifyBtn" class="verify-btn" disabled><i class="fas fa-check-circle"></i> Submit & Verify</button>
             </div>
             
@@ -201,7 +206,6 @@
         <div class="section-title"><i class="fas fa-info-circle"></i><span>Important Notes</span></div>
         <div style="color: #d1d5db; font-size: 13px; line-height: 1.6;">
             <p><i class="fas fa-check-circle" style="color: #10b981;"></i> You must complete <strong>BOTH</strong> Facebook and Twitter tasks to enable withdrawal.</p>
-            <p style="margin-top: 10px;"><i class="fas fa-clock" style="color: #f59e0b;"></i> Verification may take 1-2 minutes after submission.</p>
             <p style="margin-top: 10px;"><i class="fas fa-shield-alt" style="color: #667eea;"></i> Your screenshot is for verification only and will not be stored permanently.</p>
             <p style="margin-top: 10px;"><i class="fas fa-external-link-alt" style="color: #a78bfa;"></i> Click "Open" button to open page in new tab. Take screenshot and come back to upload.</p>
         </div>
@@ -255,8 +259,9 @@
         async function loadUserData() {
             const snap = await get(ref(db, 'users/' + currentUser.uid));
             userData = snap.val();
-            if (!userData) userData = { spinWallet: 0, socialTasks: {} };
+            if (!userData) userData = { spinWallet: 0, totalEarned: 0, socialTasks: {} };
             if (!userData.socialTasks) userData.socialTasks = {};
+            document.getElementById('spinWallet').innerText = userData.spinWallet || 0;
         }
         
         async function loadTaskStatus() {
@@ -273,64 +278,74 @@
             }
         }
         
-        // Facebook File Upload
+        // Facebook Upload
         const facebookFile = document.getElementById('facebookFile');
         const facebookPreview = document.getElementById('facebookPreview');
         const facebookVerifyBtn = document.getElementById('facebookVerifyBtn');
         let facebookImageData = null;
         
-        facebookFile.addEventListener('change', (e) => {
+        facebookFile.addEventListener('change', function(e) {
             const file = e.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('❌ File too large! Max 5MB');
-                    return;
-                }
-                if (!file.type.startsWith('image/')) {
-                    alert('❌ Please select an image file!');
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    facebookImageData = ev.target.result;
-                    facebookPreview.src = facebookImageData;
-                    facebookPreview.style.display = 'block';
-                    facebookVerifyBtn.disabled = false;
-                };
-                reader.readAsDataURL(file);
+            if (!file) return;
+            
+            if (file.size > 5 * 1024 * 1024) {
+                alert('❌ File too large! Max 5MB');
+                facebookFile.value = '';
+                return;
             }
+            
+            if (!file.type.startsWith('image/')) {
+                alert('❌ Please select an image file!');
+                facebookFile.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                facebookImageData = ev.target.result;
+                facebookPreview.src = facebookImageData;
+                facebookPreview.style.display = 'block';
+                facebookVerifyBtn.disabled = false;
+                facebookVerifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Submit & Verify';
+            };
+            reader.readAsDataURL(file);
         });
         
-        // Twitter File Upload
+        // Twitter Upload
         const twitterFile = document.getElementById('twitterFile');
         const twitterPreview = document.getElementById('twitterPreview');
         const twitterVerifyBtn = document.getElementById('twitterVerifyBtn');
         let twitterImageData = null;
         
-        twitterFile.addEventListener('change', (e) => {
+        twitterFile.addEventListener('change', function(e) {
             const file = e.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('❌ File too large! Max 5MB');
-                    return;
-                }
-                if (!file.type.startsWith('image/')) {
-                    alert('❌ Please select an image file!');
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    twitterImageData = ev.target.result;
-                    twitterPreview.src = twitterImageData;
-                    twitterPreview.style.display = 'block';
-                    twitterVerifyBtn.disabled = false;
-                };
-                reader.readAsDataURL(file);
+            if (!file) return;
+            
+            if (file.size > 5 * 1024 * 1024) {
+                alert('❌ File too large! Max 5MB');
+                twitterFile.value = '';
+                return;
             }
+            
+            if (!file.type.startsWith('image/')) {
+                alert('❌ Please select an image file!');
+                twitterFile.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                twitterImageData = ev.target.result;
+                twitterPreview.src = twitterImageData;
+                twitterPreview.style.display = 'block';
+                twitterVerifyBtn.disabled = false;
+                twitterVerifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Submit & Verify';
+            };
+            reader.readAsDataURL(file);
         });
         
         // Facebook Verify
-        facebookVerifyBtn.addEventListener('click', async () => {
+        facebookVerifyBtn.addEventListener('click', async function() {
             if (!facebookImageData) {
                 alert('❌ Please select a screenshot first!');
                 return;
@@ -353,6 +368,11 @@
                 document.getElementById('facebookUploadArea').style.display = 'none';
                 document.getElementById('facebookCompleted').style.display = 'block';
                 
+                // Clear image data
+                facebookImageData = null;
+                facebookPreview.style.display = 'none';
+                facebookFile.value = '';
+                
                 alert('✅ Facebook Task Verified! +3 RND added to your Spin Wallet!');
                 
             } catch (error) {
@@ -364,7 +384,7 @@
         });
         
         // Twitter Verify
-        twitterVerifyBtn.addEventListener('click', async () => {
+        twitterVerifyBtn.addEventListener('click', async function() {
             if (!twitterImageData) {
                 alert('❌ Please select a screenshot first!');
                 return;
@@ -386,6 +406,11 @@
                 
                 document.getElementById('twitterUploadArea').style.display = 'none';
                 document.getElementById('twitterCompleted').style.display = 'block';
+                
+                // Clear image data
+                twitterImageData = null;
+                twitterPreview.style.display = 'none';
+                twitterFile.value = '';
                 
                 alert('✅ Twitter Task Verified! +3 RND added to your Spin Wallet!');
                 
