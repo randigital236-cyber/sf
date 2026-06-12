@@ -3,502 +3,694 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Admin Panel - RND Rewards</title>
+    <title>RND Rewards - Earn Crypto | Professional Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #f0f2f5; }
-        
-        .header { background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 25px; text-align: center; }
-        .header h1 { font-size: 28px; }
-        .header p { opacity: 0.8; margin-top: 5px; }
-        
-        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 30px; max-width: 1400px; margin: 0 auto; }
-        .stat-card { background: white; border-radius: 20px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .stat-card i { font-size: 45px; color: #667eea; margin-bottom: 10px; }
-        .stat-card .number { font-size: 36px; font-weight: bold; color: #1f2937; }
-        .stat-card .label { color: #6b7280; font-size: 14px; margin-top: 5px; }
-        
-        .section { background: white; border-radius: 20px; margin: 20px auto; padding: 25px; max-width: 1400px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-        .section-title { font-size: 22px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-left: 4px solid #667eea; padding-left: 15px; }
-        .section-title i { color: #667eea; }
-        
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; }
-        th { background: #f8f9fa; font-weight: 600; color: #374151; }
-        tr:hover { background: #f8f9fa; }
-        
-        .status-pending { background: #fef3c7; color: #d97706; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
-        .status-completed { background: #d1fae5; color: #059669; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
-        .status-rejected { background: #fee2e2; color: #dc2626; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
-        
-        .copy-btn { background: #667eea; color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; transition: 0.2s; }
-        .copy-btn:hover { background: #5a67d8; }
-        .action-btn { color: white; border: none; padding: 6px 15px; border-radius: 8px; cursor: pointer; margin: 0 3px; font-size: 12px; }
-        .action-btn.complete { background: #059669; }
-        .action-btn.reject { background: #ef4444; }
-        
-        .tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid #e5e7eb; }
-        .tab { padding: 10px 25px; cursor: pointer; border: none; background: none; font-size: 16px; font-weight: 500; color: #6b7280; transition: 0.2s; }
-        .tab.active { color: #667eea; border-bottom: 2px solid #667eea; margin-bottom: -2px; }
-        
-        .search-box { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
-        .search-box input { flex: 1; padding: 12px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 14px; }
-        .search-box input:focus { outline: none; border-color: #667eea; }
-        
-        .refresh-btn { background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; }
-        
-        /* Modal for Reject Reason */
-        .modal {
-            display: none;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Professional Background */
+        .bg-gradient {
             position: fixed;
-            z-index: 1000;
-            left: 0;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
+            z-index: -2;
+            background: linear-gradient(135deg, #0a0a0f 0%, #0f0f1a 50%, #0a0a0f 100%);
         }
-        .modal-content {
-            background: white;
-            margin: 20% auto;
-            padding: 25px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            animation: slideIn 0.3s ease;
+
+        .bg-glow {
+            position: fixed;
+            top: 20%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, rgba(102, 126, 234, 0) 70%);
+            z-index: -1;
+            animation: floatGlow 10s ease-in-out infinite;
         }
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+
+        .bg-glow-2 {
+            position: fixed;
+            bottom: 10%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0) 70%);
+            z-index: -1;
+            animation: floatGlow 8s ease-in-out infinite reverse;
         }
-        .modal-content h3 { margin-bottom: 15px; color: #1f2937; }
-        .modal-content textarea {
+
+        @keyframes floatGlow {
+            0%, 100% { transform: translate(0, 0); opacity: 0.5; }
+            50% { transform: translate(30px, -20px); opacity: 0.8; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Professional Card Design */
+        .card {
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 48px 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(102, 126, 234, 0.2);
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 14px;
-            resize: vertical;
-            margin-bottom: 15px;
+            max-width: 500px;
+            animation: slideUp 0.6s ease;
         }
-        .modal-content textarea:focus { outline: none; border-color: #667eea; }
-        .modal-buttons { display: flex; gap: 10px; justify-content: center; }
-        .modal-buttons button { padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; }
-        .confirm-reject { background: #ef4444; color: white; border: none; }
-        .cancel-reject { background: #9ca3af; color: white; border: none; }
-        
-        .reason-cell {
-            max-width: 200px;
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Logo Section */
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .logo-icon i {
+            font-size: 35px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo p {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            background: rgba(10, 10, 20, 0.8);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 16px;
+            font-size: 15px;
+            color: white;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #6b7280;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-google {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .btn-google:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-google i {
+            color: #db4437;
+            font-size: 18px;
+        }
+
+        /* Divider */
+        .divider {
+            text-align: center;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .divider span {
+            background: rgba(20, 20, 30, 0.8);
+            padding: 0 15px;
+            position: relative;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        /* Message Boxes */
+        .message {
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 14px;
+            text-align: center;
+            font-size: 13px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .error {
+            background: rgba(220, 38, 38, 0.15);
+            color: #f87171;
+            border-left: 3px solid #ef4444;
+        }
+
+        .success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border-left: 3px solid #10b981;
+        }
+
+        .info {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border-left: 3px solid #3b82f6;
+        }
+
+        /* Links */
+        .link-text {
+            text-align: center;
+            margin-top: 28px;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .link-text a {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .link-text a:hover {
+            color: #c4b5fd;
+        }
+
+        /* Footer Note */
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
             font-size: 11px;
             color: #6b7280;
         }
-        
-        .loading { text-align: center; padding: 40px; color: #6b7280; }
-        
-        @media (max-width: 768px) {
-            .stats-container { padding: 15px; gap: 10px; }
-            .stat-card .number { font-size: 24px; }
-            th, td { padding: 8px 10px; font-size: 12px; }
-            .section { margin: 10px; padding: 15px; }
-            .reason-cell { max-width: 150px; }
+
+        .footer-note i {
+            margin-right: 5px;
+        }
+
+        @media (max-width: 480px) {
+            .card { padding: 32px 24px; }
+            .logo h1 { font-size: 28px; }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1><i class="fas fa-crown"></i> Admin Panel</h1>
-        <p>Manage Users & Withdrawals | RND Rewards</p>
-    </div>
+    <div class="bg-gradient"></div>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
 
-    <div class="stats-container">
-        <div class="stat-card">
-            <i class="fas fa-users"></i>
-            <div class="number" id="totalUsers">0</div>
-            <div class="label">Total Users</div>
-        </div>
-        <div class="stat-card">
-            <i class="fas fa-hand-holding-usd"></i>
-            <div class="number" id="totalWithdrawals">0</div>
-            <div class="label">Total Withdrawals</div>
-        </div>
-        <div class="stat-card">
-            <i class="fas fa-clock"></i>
-            <div class="number" id="pendingWithdrawals">0</div>
-            <div class="label">Pending Withdrawals</div>
-        </div>
-        <div class="stat-card">
-            <i class="fas fa-check-circle"></i>
-            <div class="number" id="completedWithdrawals">0</div>
-            <div class="label">Completed Withdrawals</div>
-        </div>
-    </div>
-
-    <div class="section">
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('users')"><i class="fas fa-users"></i> All Users</button>
-            <button class="tab" onclick="showTab('withdrawals')"><i class="fas fa-money-bill-wave"></i> Withdrawal Requests</button>
-        </div>
-
-        <!-- Users Tab -->
-        <div id="usersTab">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="🔍 Search by name or email..." onkeyup="searchUsers()">
-                <button class="refresh-btn" onclick="loadData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+    <div class="container">
+        <!-- Signup Card -->
+        <div class="card" id="signupCard">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-coins"></i></div>
+                <h1>RND Rewards</h1>
+                <p>Create Account & Start Earning</p>
             </div>
-            <div class="table-container">
-                <table id="usersTable">
-                    <thead>
-                        <tr><th>#</th><th>User ID</th><th>Name</th><th>Email</th><th>Referral Code</th><th>Referral Wallet</th><th>Spin Wallet</th><th>Total Earned</th><th>Joined Date</th></td>
-                    </thead>
-                    <tbody id="usersList">
-                        <tr><td colspan="9" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading users...</td></tr>
-                    </tbody>
-                </table>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="name" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" placeholder="Email Address" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Password (min 6 characters)" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-gift"></i>
+                    <input type="text" id="referralCode" placeholder="Referral Code (Optional)" autocomplete="off">
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-rocket"></i> Create Account</button>
+            </form>
+
+            <div class="divider"><span>OR CONTINUE WITH</span></div>
+            <button id="googleSignupBtn" class="btn btn-google"><i class="fab fa-google"></i> Google</button>
+
+            <div id="message" class="message"></div>
+
+            <div class="link-text">
+                Already have an account? <a onclick="showLogin()">Sign In</a>
+            </div>
+            <div class="footer-note">
+                <i class="fas fa-shield-alt"></i> Secure Platform | 24/7 Support
             </div>
         </div>
 
-        <!-- Withdrawals Tab -->
-        <div id="withdrawalsTab" style="display:none;">
-            <div style="margin-bottom: 20px;">
-                <button class="refresh-btn" onclick="loadData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+        <!-- Login Card -->
+        <div class="card" id="loginCard" style="display:none;">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-coins"></i></div>
+                <h1>Welcome Back</h1>
+                <p>Login to your account</p>
             </div>
-            <div class="table-container">
-                <table id="withdrawalsTable">
-                    <thead>
-                        <tr><th>#</th><th>User Name</th><th>Email</th><th>Amount</th><th>Wallet Address</th><th>Type</th><th>Status</th><th>Reject Reason</th><th>Date</th><th>Action</th></tr>
-                    </thead>
-                    <tbody id="withdrawalsList">
-                        <tr><td colspan="10" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading withdrawals...</td></tr>
-                    </tbody>
-                </table>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="loginEmail" placeholder="Email Address" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-arrow-right"></i> Sign In</button>
+            </form>
+
+            <div class="divider"><span>OR CONTINUE WITH</span></div>
+            <button id="googleLoginBtn" class="btn btn-google"><i class="fab fa-google"></i> Google</button>
+
+            <div id="loginMessage" class="message"></div>
+
+            <div class="link-text">
+                <a onclick="showForgotPassword()">Forgot Password?</a>
+            </div>
+            <div class="link-text">
+                New user? <a onclick="showSignup()">Create Account</a>
+            </div>
+            <div class="footer-note">
+                <i class="fas fa-shield-alt"></i> Secure Platform | 24/7 Support
             </div>
         </div>
-    </div>
 
-    <!-- Reject Reason Modal -->
-    <div id="rejectModal" class="modal">
-        <div class="modal-content">
-            <h3><i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> Reject Withdrawal</h3>
-            <textarea id="rejectReason" rows="3" placeholder="Enter reason for rejection...&#10;&#10;Example:&#10;❌ You have not followed our Facebook page&#10;❌ You have not followed our Twitter/X page"></textarea>
-            <div class="modal-buttons">
-                <button class="confirm-reject" onclick="confirmReject()">Confirm Reject</button>
-                <button class="cancel-reject" onclick="closeRejectModal()">Cancel</button>
+        <!-- Forgot Password Card -->
+        <div class="card" id="forgotCard" style="display:none;">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-key"></i></div>
+                <h1>Reset Password</h1>
+                <p>Enter your email to reset password</p>
+            </div>
+
+            <form id="forgotForm">
+                <div class="form-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="forgotEmail" placeholder="Email Address" required>
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> Send Reset Link</button>
+            </form>
+
+            <div id="forgotMessage" class="message"></div>
+
+            <div class="link-text">
+                <a onclick="showLogin()">Back to Sign In</a>
+            </div>
+            <div class="footer-note">
+                <i class="fas fa-shield-alt"></i> Secure Platform | 24/7 Support
             </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-        
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, applyActionCode, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
         const firebaseConfig = {
-            apiKey: "AIzaSyARtuToUfDsK6EOrqpJ6nBpfSHx2JobWhQ",
-            authDomain: "randigital-e7715.firebaseapp.com",
-            databaseURL: "https://randigital-e7715-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "randigital-e7715",
-            storageBucket: "randigital-e7715.firebasestorage.app",
-            messagingSenderId: "218883279353",
-            appId: "1:218883279353:web:cda990aa068f8fdf4d1528"
+            apiKey: "AIzaSyAz-TLmOhiy-_vHHmIjW8gyIOqTR_PT9o0",
+            authDomain: "rnd2-70080.firebaseapp.com",
+            projectId: "rnd2-70080",
+            storageBucket: "rnd2-70080.firebasestorage.app",
+            messagingSenderId: "468625887938",
+            appId: "1:468625887938:web:5cb4ddbcf31b6fc0a4615b",
+            measurementId: "G-ELVJD5NQKB",
+            databaseURL: "https://rnd2-70080-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
-        
+
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getDatabase(app);
-        
-        let allUsers = [];
-        let allWithdrawals = [];
-        let currentWithdrawalId = null;
-        
-        window.loadData = async function() {
-            console.log("Loading data from Firebase...");
-            await loadUsers();
-            await loadWithdrawals();
-            updateStats();
-        };
-        
-        async function loadUsers() {
-            try {
+        const googleProvider = new GoogleAuthProvider();
+
+        const OFFICIAL_DOMAIN = "https://randigital236-cyber.github.io/sf/";
+
+        function getReferralCodeFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('ref');
+        }
+
+        function setReferralCodeFromURL() {
+            const refCode = getReferralCodeFromURL();
+            if (refCode) {
+                const referralInput = document.getElementById('referralCode');
+                if (referralInput) referralInput.value = refCode.toUpperCase();
+            }
+        }
+
+        function generateReferralCode(userId) {
+            return userId.substring(0, 8).toUpperCase();
+        }
+
+        async function saveUserToDatabase(user, name, referralCodeFromInput, isEmailVerified = false) {
+            const userReferralCode = generateReferralCode(user.uid);
+            let referredBy = null, level1Referrer = null, level2Referrer = null;
+            
+            if (referralCodeFromInput) {
                 const usersRef = ref(db, 'users');
                 const snapshot = await get(usersRef);
                 const users = snapshot.val();
-                allUsers = [];
-                
                 if (users) {
                     for (let uid in users) {
-                        allUsers.push({
-                            uid: uid,
-                            name: users[uid].name || 'N/A',
-                            email: users[uid].email || 'N/A',
-                            referralCode: users[uid].referralCode || 'N/A',
-                            referralWallet: users[uid].referralWallet || 0,
-                            spinWallet: users[uid].spinWallet || 0,
-                            totalEarned: users[uid].totalEarned || 0,
-                            createdAt: users[uid].createdAt || new Date().toISOString()
-                        });
+                        if (users[uid].referralCode === referralCodeFromInput.toUpperCase()) {
+                            referredBy = uid;
+                            if (users[uid].referredBy) {
+                                level1Referrer = users[uid].referredBy;
+                                if (users[level1Referrer] && users[level1Referrer].referredBy)
+                                    level2Referrer = users[level1Referrer].referredBy;
+                            }
+                            break;
+                        }
                     }
                 }
-                
-                console.log(`Loaded ${allUsers.length} users`);
-                displayUsers(allUsers);
-            } catch (error) {
-                console.error("Error loading users:", error);
-                document.getElementById('usersList').innerHTML = '<tr><td colspan="9" class="loading">❌ Error loading users. Check console.</td></tr>';
             }
+            
+            const userData = {
+                name: name, email: user.email, userId: user.uid,
+                referralCode: userReferralCode, referredBy: referredBy || null,
+                referralWallet: referredBy ? 5 : 0, spinWallet: 0,
+                totalEarned: referredBy ? 5 : 0, totalWithdrawn: 0,
+                status: 'active', emailVerified: isEmailVerified,
+                createdAt: new Date().toISOString(), socialTasks: {}
+            };
+            
+            await set(ref(db, 'users/' + user.uid), userData);
+            await set(ref(db, 'referrals/' + user.uid), { level1: [], level2: [] });
+            
+            if (referredBy) {
+                const referrerRef = ref(db, 'users/' + referredBy);
+                const referrerSnap = await get(referrerRef);
+                if (referrerSnap.exists()) {
+                    const referrer = referrerSnap.val();
+                    await update(ref(db, 'users/' + referredBy), {
+                        referralWallet: (referrer.referralWallet || 0) + 2,
+                        totalEarned: (referrer.totalEarned || 0) + 2
+                    });
+                    const level1Ref = ref(db, 'referrals/' + referredBy + '/level1');
+                    const level1Data = await get(level1Ref);
+                    let level1List = level1Data.val() || [];
+                    if (!level1List.includes(user.uid)) { level1List.push(user.uid); await set(level1Ref, level1List); }
+                }
+                if (level1Referrer) {
+                    const level2UserRef = ref(db, 'users/' + level1Referrer);
+                    const level2Snap = await get(level2UserRef);
+                    if (level2Snap.exists()) {
+                        const level2User = level2Snap.val();
+                        await update(ref(db, 'users/' + level1Referrer), {
+                            referralWallet: (level2User.referralWallet || 0) + 1,
+                            totalEarned: (level2User.totalEarned || 0) + 1
+                        });
+                        const level2ListRef = ref(db, 'referrals/' + level1Referrer + '/level2');
+                        const level2ListData = await get(level2ListRef);
+                        let level2List = level2ListData.val() || [];
+                        if (!level2List.includes(user.uid)) { level2List.push(user.uid); await set(level2ListRef, level2List); }
+                    }
+                }
+            }
+            return userReferralCode;
         }
-        
-        async function loadWithdrawals() {
+
+        async function handleEmailVerification() {
             try {
-                const withdrawalsRef = ref(db, 'withdrawals');
-                const snapshot = await get(withdrawalsRef);
-                const withdrawals = snapshot.val();
-                allWithdrawals = [];
-                
-                if (withdrawals) {
-                    for (let wid in withdrawals) {
-                        allWithdrawals.push({
-                            id: wid,
-                            uid: withdrawals[wid].uid,
-                            amount: withdrawals[wid].amount || 0,
-                            walletAddress: withdrawals[wid].walletAddress || 'N/A',
-                            walletType: withdrawals[wid].walletType || 'referralWallet',
-                            status: withdrawals[wid].status || 'pending',
-                            rejectReason: withdrawals[wid].rejectReason || '',
-                            date: withdrawals[wid].date || new Date().toISOString()
-                        });
+                if (window.location.href.includes('mode=verifyEmail')) {
+                    const actionCode = new URLSearchParams(window.location.search).get('oobCode');
+                    if (actionCode) {
+                        const user = auth.currentUser;
+                        if (user) {
+                            await applyActionCode(auth, actionCode);
+                            await user.reload();
+                            if (user.emailVerified) {
+                                await update(ref(db, 'users/' + user.uid), { emailVerified: true });
+                                const userSnapshot = await get(ref(db, 'users/' + user.uid));
+                                const userData = userSnapshot.val();
+                                if (userData) {
+                                    localStorage.setItem('userReferralCode', userData.referralCode);
+                                    localStorage.setItem('userName', userData.name);
+                                    localStorage.setItem('userId', user.uid);
+                                }
+                                window.location.href = 'dashboard.html';
+                            }
+                        } else {
+                            window.location.href = 'index.html?verified=success';
+                        }
                     }
-                    allWithdrawals.sort((a, b) => new Date(b.date) - new Date(a.date));
                 }
-                
-                console.log(`Loaded ${allWithdrawals.length} withdrawals`);
-                displayWithdrawals(allWithdrawals);
             } catch (error) {
-                console.error("Error loading withdrawals:", error);
-                document.getElementById('withdrawalsList').innerHTML = '<tr><td colspan="10" class="loading">❌ Error loading withdrawals. Check console.</td></tr>';
+                console.error("Verification error:", error);
             }
         }
-        
-        function displayUsers(users) {
-            const tbody = document.getElementById('usersList');
-            if (!tbody) return;
-            
-            if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="loading">📭 No users found</td></tr>';
+
+        window.showLogin = function() {
+            document.getElementById('signupCard').style.display = 'none';
+            document.getElementById('loginCard').style.display = 'block';
+            document.getElementById('forgotCard').style.display = 'none';
+        }
+        window.showSignup = function() {
+            document.getElementById('signupCard').style.display = 'block';
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('forgotCard').style.display = 'none';
+            setReferralCodeFromURL();
+        }
+        window.showForgotPassword = function() {
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('forgotCard').style.display = 'block';
+        }
+        setReferralCodeFromURL();
+
+        // Signup
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const referralCode = document.getElementById('referralCode').value;
+            const messageDiv = document.getElementById('message');
+
+            if (password.length < 6) {
+                messageDiv.innerHTML = '<div class="error">Password must be at least 6 characters!</div>';
                 return;
             }
-            
-            tbody.innerHTML = '';
-            users.forEach((user, index) => {
-                const row = tbody.insertRow();
-                row.insertCell(0).innerText = index + 1;
-                row.insertCell(1).innerHTML = `<code style="font-size:11px;">${user.uid.substring(0, 8)}...</code>`;
-                row.insertCell(2).innerHTML = `<strong>${escapeHtml(user.name)}</strong>`;
-                row.insertCell(3).innerHTML = `<small>${escapeHtml(user.email)}</small>`;
-                row.insertCell(4).innerHTML = `<code style="background:#f3f4f6; padding:2px 6px; border-radius:6px;">${user.referralCode}</code>`;
-                row.insertCell(5).innerHTML = `<strong style="color:#667eea;">${user.referralWallet}</strong> RND`;
-                row.insertCell(6).innerHTML = `<strong style="color:#764ba2;">${user.spinWallet}</strong> RND`;
-                row.insertCell(7).innerHTML = `<strong style="color:#059669;">${user.totalEarned}</strong> RND`;
-                row.insertCell(8).innerHTML = new Date(user.createdAt).toLocaleDateString('hi-IN');
-            });
-        }
-        
-        function getUserName(uid) {
-            const user = allUsers.find(u => u.uid === uid);
-            return user ? user.name : uid.substring(0, 8);
-        }
-        
-        function getUserEmail(uid) {
-            const user = allUsers.find(u => u.uid === uid);
-            return user ? user.email : '-';
-        }
-        
-        function getUserSocialTasks(uid) {
-            const user = allUsers.find(u => u.uid === uid);
-            if (user && user.socialTasks) {
-                return user.socialTasks;
-            }
-            return {};
-        }
-        
-        function displayWithdrawals(withdrawals) {
-            const tbody = document.getElementById('withdrawalsList');
-            if (!tbody) return;
-            
-            if (withdrawals.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" class="loading">📭 No withdrawal requests found</td></tr>';
-                return;
-            }
-            
-            tbody.innerHTML = '';
-            withdrawals.forEach((wd, index) => {
-                const row = tbody.insertRow();
-                row.insertCell(0).innerText = index + 1;
-                row.insertCell(1).innerHTML = `<strong>${escapeHtml(getUserName(wd.uid))}</strong>`;
-                row.insertCell(2).innerHTML = `<small>${escapeHtml(getUserEmail(wd.uid))}</small>`;
-                row.insertCell(3).innerHTML = `<strong style="color:#059669;">${wd.amount}</strong> RND`;
-                row.insertCell(4).innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap;">
-                        <code style="background:#f3f4f6; padding:4px 8px; border-radius:6px; font-size:11px; word-break:break-all;">${escapeHtml(wd.walletAddress)}</code>
-                        <button class="copy-btn" onclick="copyAddress('${escapeHtml(wd.walletAddress)}')"><i class="fas fa-copy"></i></button>
-                    </div>
-                `;
-                row.insertCell(5).innerHTML = wd.walletType === 'referralWallet' ? '💰 Referral Wallet' : '🎮 Spin Wallet';
-                row.insertCell(6).innerHTML = getStatusBadge(wd.status);
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                await sendEmailVerification(user);
+                await saveUserToDatabase(user, name, referralCode, false);
                 
-                // Reject Reason Cell
-                let reasonHtml = '-';
-                if (wd.status === 'rejected' && wd.rejectReason) {
-                    reasonHtml = `<span style="color:#dc2626; font-size:11px;">⚠️ ${escapeHtml(wd.rejectReason)}</span>`;
-                } else if (wd.status === 'completed') {
-                    reasonHtml = '<span style="color:#059669; font-size:11px;"><i class="fas fa-check-circle"></i> Approved</span>';
-                } else if (wd.status === 'pending') {
-                    reasonHtml = '<span style="color:#d97706; font-size:11px;">Awaiting review</span>';
+                messageDiv.innerHTML = `<div class="info"><i class="fas fa-envelope"></i> ✅ Verification email sent to ${email}!<br><br>Please check your inbox and click the verification link.<br>After verification, you will be automatically redirected.</div>`;
+            } catch (error) {
+                if (error.code === 'auth/email-already-in-use') {
+                    messageDiv.innerHTML = '<div class="error">Email already registered! Please login.</div>';
+                } else {
+                    messageDiv.innerHTML = '<div class="error">' + error.message + '</div>';
                 }
-                row.insertCell(7).innerHTML = reasonHtml;
+            }
+        });
+        
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const messageDiv = document.getElementById('loginMessage');
+            
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
                 
-                row.insertCell(8).innerHTML = new Date(wd.date).toLocaleString('hi-IN');
-                row.insertCell(9).innerHTML = getActionButtons(wd);
-            });
-        }
-        
-        function getStatusBadge(status) {
-            switch(status) {
-                case 'pending': return '<span class="status-pending"><i class="fas fa-clock"></i> Pending</span>';
-                case 'completed': return '<span class="status-completed"><i class="fas fa-check-circle"></i> Completed</span>';
-                case 'rejected': return '<span class="status-rejected"><i class="fas fa-times-circle"></i> Rejected</span>';
-                default: return '<span class="status-pending">Pending</span>';
-            }
-        }
-        
-        function getActionButtons(wd) {
-            if (wd.status === 'pending') {
-                return `
-                    <button class="action-btn complete" onclick="approveWithdrawal('${wd.id}')"><i class="fas fa-check"></i> Approve</button>
-                    <button class="action-btn reject" onclick="openRejectModal('${wd.id}')"><i class="fas fa-times"></i> Reject</button>
-                `;
-            }
-            return '-';
-        }
-        
-        // Approve Withdrawal
-        window.approveWithdrawal = async function(id) {
-            if (confirm('Are you sure you want to APPROVE this withdrawal?')) {
-                try {
-                    await update(ref(db, `withdrawals/${id}`), { 
-                        status: 'completed', 
-                        processedAt: new Date().toISOString(),
-                        rejectReason: null
-                    });
-                    alert(`✅ Withdrawal approved successfully!`);
-                    await loadData();
-                } catch (error) {
-                    console.error("Error:", error);
-                    alert("❌ Error updating status. Check console.");
+                if (!user.emailVerified) {
+                    await sendEmailVerification(user);
+                    messageDiv.innerHTML = '<div class="error">❌ Email not verified! A new verification link has been sent. Please check your email.</div>';
+                    return;
+                }
+                
+                const userRef = ref(db, 'users/' + user.uid);
+                const snapshot = await get(userRef);
+                const userData = snapshot.val();
+                
+                if (userData && userData.status === 'active') {
+                    localStorage.setItem('userReferralCode', userData.referralCode);
+                    localStorage.setItem('userName', userData.name);
+                    localStorage.setItem('userId', user.uid);
+                    messageDiv.innerHTML = '<div class="success">Login successful! Redirecting...</div>';
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+                } else {
+                    messageDiv.innerHTML = '<div class="error">Account is blocked. Contact support.</div>';
+                }
+            } catch (error) {
+                if (error.code === 'auth/user-not-found') {
+                    messageDiv.innerHTML = '<div class="error">No account found. Please sign up.</div>';
+                } else if (error.code === 'auth/wrong-password') {
+                    messageDiv.innerHTML = '<div class="error">Wrong password. Try again.</div>';
+                } else {
+                    messageDiv.innerHTML = '<div class="error">' + error.message + '</div>';
                 }
             }
-        };
+        });
         
-        // Open Reject Modal
-        window.openRejectModal = function(id) {
-            currentWithdrawalId = id;
-            document.getElementById('rejectReason').value = '';
-            document.getElementById('rejectModal').style.display = 'block';
-        };
-        
-        // Close Reject Modal
-        window.closeRejectModal = function() {
-            document.getElementById('rejectModal').style.display = 'none';
-            currentWithdrawalId = null;
-        };
-        
-        // Confirm Reject with Reason
-        window.confirmReject = async function() {
-            const reason = document.getElementById('rejectReason').value.trim();
+        // Google Signup/Login
+        async function handleGoogleSignIn(isSignup = true) {
+            const messageDiv = isSignup ? document.getElementById('message') : document.getElementById('loginMessage');
+            const referralCode = isSignup ? document.getElementById('referralCode').value : null;
             
-            if (!reason) {
-                alert('❌ Please enter a reason for rejection!');
-                return;
-            }
-            
-            if (confirm(`Are you sure you want to REJECT this withdrawal?\n\nReason: ${reason}`)) {
-                try {
-                    await update(ref(db, `withdrawals/${currentWithdrawalId}`), { 
-                        status: 'rejected', 
-                        rejectReason: reason,
-                        processedAt: new Date().toISOString()
-                    });
-                    alert(`✅ Withdrawal rejected!\nReason: ${reason}`);
-                    closeRejectModal();
-                    await loadData();
-                } catch (error) {
-                    console.error("Error:", error);
-                    alert("❌ Error updating status. Check console.");
+            try {
+                const result = await signInWithPopup(auth, googleProvider);
+                const user = result.user;
+                const name = user.displayName || user.email.split('@')[0];
+                const userRef = ref(db, 'users/' + user.uid);
+                const snapshot = await get(userRef);
+                
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    if (userData.status === 'active') {
+                        localStorage.setItem('userReferralCode', userData.referralCode);
+                        localStorage.setItem('userName', userData.name);
+                        localStorage.setItem('userId', user.uid);
+                        messageDiv.innerHTML = '<div class="success">Login successful! Redirecting...</div>';
+                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+                    } else {
+                        messageDiv.innerHTML = '<div class="error">Account is blocked. Contact support.</div>';
+                    }
+                } else if (isSignup) {
+                    const userReferralCode = await saveUserToDatabase(user, name, referralCode, true);
+                    messageDiv.innerHTML = '<div class="success">Account created! Redirecting...</div>';
+                    localStorage.setItem('userReferralCode', userReferralCode);
+                    localStorage.setItem('userName', name);
+                    localStorage.setItem('userId', user.uid);
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 2500);
+                } else {
+                    messageDiv.innerHTML = '<div class="error">No account found. Please sign up first.</div>';
                 }
+            } catch (error) {
+                messageDiv.innerHTML = '<div class="error">Google sign in failed: ' + error.message + '</div>';
             }
-        };
-        
-        window.copyAddress = function(address) {
-            if (address && address !== 'N/A') {
-                navigator.clipboard.writeText(address);
-                alert('✅ Address copied to clipboard!');
-            } else {
-                alert('❌ No address to copy');
-            }
-        };
-        
-        window.searchUsers = function() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allUsers.filter(user => 
-                (user.name && user.name.toLowerCase().includes(searchTerm)) ||
-                (user.email && user.email.toLowerCase().includes(searchTerm))
-            );
-            displayUsers(filtered);
-        };
-        
-        window.showTab = function(tab) {
-            const usersTab = document.getElementById('usersTab');
-            const withdrawalsTab = document.getElementById('withdrawalsTab');
-            const tabs = document.querySelectorAll('.tab');
-            
-            tabs.forEach(t => t.classList.remove('active'));
-            
-            if (tab === 'users') {
-                usersTab.style.display = 'block';
-                withdrawalsTab.style.display = 'none';
-                tabs[0].classList.add('active');
-            } else {
-                usersTab.style.display = 'none';
-                withdrawalsTab.style.display = 'block';
-                tabs[1].classList.add('active');
-            }
-        };
-        
-        function updateStats() {
-            document.getElementById('totalUsers').innerText = allUsers.length;
-            document.getElementById('totalWithdrawals').innerText = allWithdrawals.length;
-            document.getElementById('pendingWithdrawals').innerText = allWithdrawals.filter(w => w.status === 'pending').length;
-            document.getElementById('completedWithdrawals').innerText = allWithdrawals.filter(w => w.status === 'completed').length;
         }
         
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        document.getElementById('googleSignupBtn').addEventListener('click', () => handleGoogleSignIn(true));
+        document.getElementById('googleLoginBtn').addEventListener('click', () => handleGoogleSignIn(false));
         
-        // Close modal on outside click
-        window.onclick = function(event) {
-            const modal = document.getElementById('rejectModal');
-            if (event.target === modal) {
-                closeRejectModal();
+        // Forgot Password
+        document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('forgotEmail').value;
+            const messageDiv = document.getElementById('forgotMessage');
+            try {
+                await sendPasswordResetEmail(auth, email);
+                messageDiv.innerHTML = '<div class="success">Password reset email sent! Check your inbox.</div>';
+                setTimeout(() => { showLogin(); }, 3000);
+            } catch (error) {
+                messageDiv.innerHTML = '<div class="error">' + error.message + '</div>';
             }
-        };
+        });
         
-        loadData();
-        setInterval(() => { loadData(); }, 30000);
+        onAuthStateChanged(auth, (user) => { if (user) handleEmailVerification(); });
+        handleEmailVerification();
     </script>
 </body>
 </html>
