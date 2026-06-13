@@ -20,7 +20,6 @@
             overflow-x: hidden;
         }
 
-        /* Professional Background */
         .bg-gradient {
             position: fixed;
             top: 0;
@@ -68,7 +67,6 @@
             justify-content: center;
         }
 
-        /* Professional Card Design */
         .card {
             background: rgba(20, 20, 30, 0.8);
             backdrop-filter: blur(20px);
@@ -86,7 +84,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Logo Section */
         .logo {
             text-align: center;
             margin-bottom: 40px;
@@ -126,7 +123,6 @@
             margin-top: 8px;
         }
 
-        /* Form Styles */
         .form-group {
             margin-bottom: 20px;
             position: relative;
@@ -163,7 +159,6 @@
             color: #6b7280;
         }
 
-        /* Buttons */
         .btn {
             width: 100%;
             padding: 14px;
@@ -202,7 +197,6 @@
             font-size: 18px;
         }
 
-        /* Divider */
         .divider {
             text-align: center;
             margin: 24px 0;
@@ -227,7 +221,6 @@
             font-size: 12px;
         }
 
-        /* Message Boxes */
         .message {
             margin-top: 20px;
             padding: 14px;
@@ -260,7 +253,6 @@
             border-left: 3px solid #3b82f6;
         }
 
-        /* Links */
         .link-text {
             text-align: center;
             margin-top: 28px;
@@ -280,7 +272,6 @@
             color: #c4b5fd;
         }
 
-        /* Footer Note */
         .footer-note {
             text-align: center;
             margin-top: 30px;
@@ -290,6 +281,57 @@
 
         .footer-note i {
             margin-right: 5px;
+        }
+
+        .notification-popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-left: 4px solid #3b82f6;
+            border-radius: 16px;
+            padding: 16px 24px;
+            max-width: 90%;
+            width: 400px;
+            z-index: 2000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            animation: slideDown 0.4s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        @keyframes slideDown {
+            from { top: -100px; opacity: 0; }
+            to { top: 20px; opacity: 1; }
+        }
+
+        .notification-popup i {
+            font-size: 28px;
+            color: #3b82f6;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .notification-message {
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+
+        .notification-close {
+            cursor: pointer;
+            color: #64748b;
+            font-size: 18px;
         }
 
         @media (max-width: 480px) {
@@ -302,6 +344,8 @@
     <div class="bg-gradient"></div>
     <div class="bg-glow"></div>
     <div class="bg-glow-2"></div>
+
+    <div id="notificationContainer"></div>
 
     <div class="container">
         <!-- Signup Card -->
@@ -429,7 +473,54 @@
         const db = getDatabase(app);
         const googleProvider = new GoogleAuthProvider();
 
-        const OFFICIAL_DOMAIN = "https://randigital236-cyber.github.io/sf/";
+        // IMPORTANT: Set action code settings for email verification
+        const actionCodeSettings = {
+            url: 'https://randigital236-cyber.github.io/sf/dashboard.html',
+            handleCodeInApp: true
+        };
+
+        // Check if user is already logged in - direct redirect to dashboard
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is logged in
+                const userRef = ref(db, 'users/' + user.uid);
+                const snapshot = await get(userRef);
+                const userData = snapshot.val();
+                
+                if (userData && userData.emailVerified === true) {
+                    // Already verified, redirect to dashboard
+                    localStorage.setItem('userReferralCode', userData.referralCode);
+                    localStorage.setItem('userName', userData.name);
+                    localStorage.setItem('userId', user.uid);
+                    window.location.href = 'dashboard.html';
+                } else if (user.emailVerified === true) {
+                    // Email just got verified
+                    if (userData) {
+                        await update(ref(db, 'users/' + user.uid), { emailVerified: true });
+                        localStorage.setItem('userReferralCode', userData.referralCode);
+                        localStorage.setItem('userName', userData.name);
+                        localStorage.setItem('userId', user.uid);
+                    }
+                    window.location.href = 'dashboard.html';
+                }
+            }
+        });
+
+        function showNotification(title, message, isSuccess = false) {
+            const container = document.getElementById('notificationContainer');
+            const popup = document.createElement('div');
+            popup.className = 'notification-popup';
+            popup.innerHTML = `
+                <i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-envelope'}"></i>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <i class="fas fa-times notification-close" onclick="this.parentElement.remove()"></i>
+            `;
+            container.appendChild(popup);
+            setTimeout(() => { if (popup) popup.remove(); }, 8000);
+        }
 
         function getReferralCodeFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -516,6 +607,7 @@
             return userReferralCode;
         }
 
+        // Handle email verification - auto redirect to dashboard
         async function handleEmailVerification() {
             try {
                 if (window.location.href.includes('mode=verifyEmail')) {
@@ -537,7 +629,7 @@
                                 window.location.href = 'dashboard.html';
                             }
                         } else {
-                            window.location.href = 'index.html?verified=success';
+                            window.location.href = 'dashboard.html';
                         }
                     }
                 }
@@ -580,10 +672,17 @@
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-                await sendEmailVerification(user);
+                
+                // Send verification email with custom action URL
+                await sendEmailVerification(user, actionCodeSettings);
                 await saveUserToDatabase(user, name, referralCode, false);
                 
-                messageDiv.innerHTML = `<div class="info"><i class="fas fa-envelope"></i> ✅ Verification email sent to ${email}!<br><br>Please check your inbox and click the verification link.<br>After verification, you will be automatically redirected.</div>`;
+                const notificationMsg = `📧 Verification email sent to ${email}!<br><br>✅ आपके ईमेल पर वेरिफिकेशन लिंक भेज दिया गया है।<br><br>📌 Please check your Inbox or Spam folder.<br>📌 कृपया अपना इनबॉक्स या स्पैम फोल्डर चेक करें।<br><br>🔗 Click the verification link to directly access your dashboard.<br>🔗 वेरिफिकेशन लिंक पर क्लिक करते ही आपका डैशबोर्ड खुल जाएगा।`;
+                
+                showNotification('📧 Verification Email Sent!', notificationMsg, true);
+                
+                messageDiv.innerHTML = `<div class="info"><i class="fas fa-envelope"></i> ✅ Verification email sent!<br><br><strong>📧 Check your email inbox or spam folder</strong><br><strong>📧 कृपया अपना ईमेल इनबॉक्स या स्पैम चेक करें</strong><br><br>Click the link in email - Dashboard will open automatically!<br>ईमेल में लिंक पर क्लिक करें - डैशबोर्ड अपने आप खुल जाएगा!</div>`;
+                
             } catch (error) {
                 if (error.code === 'auth/email-already-in-use') {
                     messageDiv.innerHTML = '<div class="error">Email already registered! Please login.</div>';
@@ -605,8 +704,8 @@
                 const user = userCredential.user;
                 
                 if (!user.emailVerified) {
-                    await sendEmailVerification(user);
-                    messageDiv.innerHTML = '<div class="error">❌ Email not verified! A new verification link has been sent. Please check your email.</div>';
+                    await sendEmailVerification(user, actionCodeSettings);
+                    messageDiv.innerHTML = '<div class="error">❌ Email not verified! A new verification link has been sent. Check your email.</div>';
                     return;
                 }
                 
@@ -689,7 +788,7 @@
             }
         });
         
-        onAuthStateChanged(auth, (user) => { if (user) handleEmailVerification(); });
+        // Handle verification on load
         handleEmailVerification();
     </script>
 </body>
